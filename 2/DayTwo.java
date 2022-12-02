@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 
 public class DayTwo {
@@ -11,10 +12,10 @@ public class DayTwo {
 
         for (String round : rounds) {
             Shape opponentShape = Shape.of(round.charAt(0));
-            Shape playerShape = Shape.of(round.charAt(2));
+            Outcome desiredOutcome = Outcome.of(round.charAt(2));
 
-            totalScore += playerShape.value();
-            totalScore += getOutcome(playerShape, opponentShape).value();
+            totalScore += desiredOutcome.value();
+            totalScore += shapeForOutcome(opponentShape, desiredOutcome).value();
         }
 
         return totalScore;
@@ -24,6 +25,13 @@ public class DayTwo {
         var puzzleInput = Files.readAllLines(Path.of("2/in.txt"), StandardCharsets.UTF_8);
         var solution = solve(puzzleInput);
         System.out.println(solution);
+    }
+
+    private static Shape shapeForOutcome(Shape opponentShape, Outcome desiredOutcome){
+        return Arrays.stream(Shape.values())
+                .filter( shape -> getOutcome(shape,opponentShape) == desiredOutcome )
+                .findAny()
+                .get();
     }
 
     private static Outcome getOutcome(Shape player, Shape opponent) {
@@ -42,10 +50,12 @@ public class DayTwo {
         Rock, Paper, Scissors;
 
         public static Shape of(char c) {
-            if (c == 'A' || c == 'X') return Rock;
-            if (c == 'B' || c == 'Y') return Paper;
-            if (c == 'C' || c == 'Z') return Scissors;
-            throw new IllegalArgumentException("Invalid Shape");
+            return switch (c) {
+                case 'A' -> Rock;
+                case 'B' -> Paper;
+                case 'C' -> Scissors;
+                default -> throw new IllegalArgumentException("Invalid Shape");
+            };
         }
 
         public int value() {
@@ -59,6 +69,15 @@ public class DayTwo {
 
     private enum Outcome {
         Win, Draw, Loss;
+
+        public static Outcome of(char c) {
+            return switch (c) {
+                case 'X' -> Loss;
+                case 'Y' -> Draw;
+                case 'Z' -> Win;
+                default -> throw new IllegalArgumentException("Invalid Outcome");
+            };
+        }
 
         public int value() {
             return switch (this) {
