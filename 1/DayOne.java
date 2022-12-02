@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.PriorityQueue;
 
-public class Main {
+public class DayOne {
 
     public static int solve(List<String> items, int numElves) {
         var highest = new PriorityQueue<Integer>();
