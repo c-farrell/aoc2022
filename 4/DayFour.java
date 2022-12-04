@@ -6,8 +6,8 @@ import java.util.List;
 
 public class DayFour {
 
-    private record Pair(Range first, Range second){
-        public static Pair of(String in){
+    private record Pair(Range first, Range second) {
+        public static Pair of(String in) {
             final var elves = in.split(",");
             return new Pair(
                     Range.of(elves[0]),
@@ -15,23 +15,30 @@ public class DayFour {
             );
         }
     }
-    private record Range(int low, int high){
-        public static Range of(String in){
+
+    private record Range(int low, int high) {
+        public static Range of(String in) {
             final var digits = in.split("-");
             return new Range(
                     Integer.parseInt(digits[0]),
                     Integer.parseInt(digits[1])
-                    );
+            );
         }
     }
 
-    private static boolean fullyOverlaps(Pair pair){
+    private static boolean fullyOverlaps(Pair pair) {
         return pair.first.low >= pair.second.low && pair.first.high <= pair.second.high ||
                 pair.second.low >= pair.first.low && pair.second.high <= pair.first.high;
     }
-    public static long solve(List<String> pairs) {
-        return pairs.stream().map(Pair::of).filter(DayFour::fullyOverlaps).count();
+
+    private static boolean overlaps(Pair pair) {
+        return !(pair.first.high < pair.second.low || pair.second.high < pair.first.low);
     }
+
+    public static long solve(List<String> pairs) {
+        return pairs.stream().map(Pair::of).filter(DayFour::overlaps).count();
+    }
+
     public static void main(String[] args) throws IOException {
         var puzzleInput = Files.readAllLines(Path.of("4/in.txt"), StandardCharsets.UTF_8);
         var solution = solve(puzzleInput);
