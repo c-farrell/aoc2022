@@ -57,8 +57,12 @@ public class DayFive {
 
     private static void executeInstructions() {
         for (Instruction instruction : instructions) {
+            Deque<Character> movedCrates = new ArrayDeque<>();
             for (int i = 0; i < instruction.repetitions; i++) {
-                supplies.get(instruction.to).push(supplies.get(instruction.from()).pop());
+                movedCrates.push(supplies.get(instruction.from()).pop());
+            }
+            for (int i = 0; i < instruction.repetitions; i++) {
+                supplies.get(instruction.to).push(movedCrates.pop());
             }
         }
     }
