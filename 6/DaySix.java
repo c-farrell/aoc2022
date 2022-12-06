@@ -22,7 +22,7 @@ public class DaySix {
     }
 
     public static int solve(List<String> signals) {
-        return findStartMarker(signals.get(0), 4)
+        return findStartMarker(signals.get(0), 14)
                 .orElseThrow(() -> new IllegalArgumentException("Signal does not contain start marker"));
     }
 
